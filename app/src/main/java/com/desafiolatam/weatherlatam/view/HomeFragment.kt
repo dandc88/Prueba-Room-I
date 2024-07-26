@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -60,7 +60,20 @@ class HomeFragment : Fragment() {
 
     private fun getWeatherData() {
         lifecycleScope.launchWhenCreated {
-
+            viewModel.getWeather().collectLatest { list ->
+                if (!list.isNullOrEmpty()) { // Verifica si la lista no está vacía
+                    val lastWeather = list.last()
+                    binding.cityName.text = lastWeather.cityName
+                    adapter.weatherList = list
+                    adapter.inCelsius = tempUnit == CELSIUS
+                    adapter.notifyDataSetChanged()
+                } else {
+                    // Manejo del caso en que la lista está vacía
+                    binding.cityName.text = getString(R.string.no_data_available) // Mensaje opcional
+                    adapter.weatherList = emptyList()
+                    adapter.notifyDataSetChanged()
+                }
+            }
         }
     }
 

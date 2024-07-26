@@ -17,5 +17,6 @@
     <string name="settings_temperature_unit">settings_temperature_unit</string>
     <string name="btn_save">guardar</string>
     <string name="cancel">cancelar</string>
+    <string name="no_data_available">No data avalible</string>
 
 </resources>

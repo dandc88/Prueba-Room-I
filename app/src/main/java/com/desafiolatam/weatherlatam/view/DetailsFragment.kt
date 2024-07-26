@@ -33,7 +33,7 @@ class DetailsFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         savedInstanceState?.getInt(ITEM_ID)?.let { weatherInfoId = it }
         arguments?.getInt(ITEM_ID)?.let { weatherInfoId = it }
@@ -49,12 +49,27 @@ class DetailsFragment : Fragment() {
         val unit = sharedPref.getString(getString(R.string.settings_temperature_unit), CELSIUS)
 
         lifecycleScope.launchWhenResumed {
-            // puedes leer los datos desde el fragment enterior
+            viewModel.getWeatherById(id).collectLatest { weather ->
+                weather?.run {
+                    binding.currentTemp.text =
+                        if(unit == CELSIUS) currentTemp.toString() else currentTemp.toFahrenheit().toString()
+                    binding.maximumTemp.text = getString(R.string.max_temp, maxTemp.toString())
+                    binding.minimumTemp.text= getString(R.string.min_temp, minTemp.toString())
+                    binding.pressure.text= getString(R.string.pressure, pressure.toString())
+                    binding.humidity.text = getString(R.string.humidity, humidity.toString())
+                    binding.windSpeed.text = getString(R.string.wind_speed, windSpeed.toString())
+                    binding.sunrise.text = getString(R.string.sunrise, sunrise.toShortDateString())
+                    binding.sunset.text = getString(R.string.sunset, sunset.toShortDateString())
+                    binding.cityName.text = cityName
+                }
+            }
         }
     }
 
     private fun editCityName() {
         binding.cityName.setOnLongClickListener {
+            val dialog = EditCityNameDialogFragment()
+            dialog.show(childFragmentManager, "EditCityNameDialogFragment")
 
             true
         }

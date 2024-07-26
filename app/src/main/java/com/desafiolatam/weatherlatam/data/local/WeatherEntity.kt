@@ -16,3 +16,6 @@ data class WeatherEntity(
     val sunset: Long,
     val cityName: String,
 )
+
+
+

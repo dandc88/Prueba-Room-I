@@ -1,5 +1,7 @@
 package com.desafiolatam.weatherlatam.data.local
 
+
+
 data class WeatherWrapper(
     val coord: Coord,
     val weather: List<Weather>,
@@ -29,8 +31,8 @@ data class Coord(
 data class Main(
     val temp: Double,
     val feelsLike: Double,
-    val tempMin: Double,
-    val tempMax: Double,
+    val temp_min: Double,
+    val temp_max: Double,
     val pressure: Long,
     val humidity: Long,
     val seaLevel: Long,

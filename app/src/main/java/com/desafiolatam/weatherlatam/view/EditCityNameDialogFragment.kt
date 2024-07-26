@@ -20,9 +20,11 @@ class EditCityNameDialogFragment : DialogFragment() {
     }
 
     lateinit var binding: DialogEditCityNameBinding
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogEditCityNameBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -35,14 +37,15 @@ class EditCityNameDialogFragment : DialogFragment() {
             dismiss()
         }
         binding.btnSave.setOnClickListener {
-            saveCityName(binding.etCityName.text.toString())
+            val newCityName = binding.etCityName.text.toString()
+            saveCityName(newCityName)
             dismiss()
         }
     }
 
     private fun saveCityName(cityName: String) {
-        /*lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenCreated {
             viewModel.saveCityName(cityName)
-        }*/
+        }
     }
 }
