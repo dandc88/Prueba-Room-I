@@ -1,11 +1,19 @@
-## Este proyecto es el archivo de ayuda del Desafío 1 - Acceso a datos en Android
+## Este proyecto esta basado en  el archivo de ayuda del Desafío 1 - Acceso a datos en Android
 
-**TIPS:**
-- No desperdicies tiempo en el diseño, enfócate en que el código funcione.
-- Ten cuidado con los datos y las coroutines.
-- Recuerda usar `suspend` cuando guardes, actualices o borres datos.
-- No uses `suspend` fun con queries tipo `SELECT`.
-- El proyecto ya contiene una data class DTO que te puede ayudar a completar el desafío
-- La conexión a la base de datos ya existe
-- El llamado a la clase repository desde el viewModel ya existe
-- Para editar el nombre de la ciudad NO se especifica cómo se debe hacer, por lo que puedes utilizar el método que te acomode mas
+Se creó la carpeta assets para mover el archivo data.json y que se pudiera leer para transformar la información y con esto poblar la base de datos.
+
+Se pueden leer los datos desde Room y mostrarlos en pantalla
+
+Se puede editar el nombre de la ciudad y se muestra inmediatramente en pantalla
+
+Tenemos una consulta que dado un id retorna: Temperatura actual,
+Temperatura mínima, Temperatura máxima, Presión atmosférica, Humedad,
+Velocidad del viento, Hora de salida del sol, Hora de puesta del sol:
+
+// Consulta para obtener los datos del clima por ID
+    @Query("SELECT * FROM weather WHERE id = :id")
+    fun getWeatherById(id: Int): Flow<WeatherEntity?>
+
+    se utiliza en el DetailsFragment:
+    private fun getWeatherData(id: Int) ......
+
