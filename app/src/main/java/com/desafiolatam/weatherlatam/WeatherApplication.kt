@@ -39,7 +39,7 @@ class WeatherApplication : Application() {
 
             weatherEntities.forEach { entity ->
                 Log.d("populateDatabase", "Inserting WeatherEntity: $entity")
-                repository.insertWeather(entity)
+                repository.upsertWeather(entity)
             }
         } ?: Log.e("populateDatabase", "WeatherWrapper is null")
     }

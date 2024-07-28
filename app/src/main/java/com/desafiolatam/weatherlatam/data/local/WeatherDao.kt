@@ -1,10 +1,8 @@
 package com.desafiolatam.weatherlatam.data.local
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 
@@ -23,14 +21,12 @@ interface WeatherDao {
     @Query("SELECT * FROM weather WHERE id = :id")
     fun getWeatherById(id: Int): Flow<WeatherEntity?>
 
-    // Inserta un nuevo registro de clima
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWeather(weather: WeatherEntity)
 
+    @Upsert
+    suspend fun upsertWeather(weather: WeatherEntity)
 
-    // Actualiza el nombre de la ciudad
-    @Update(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun updateCityName(weatherEntity: WeatherEntity)
+    @Query("UPDATE weather SET cityName = :cityName WHERE id = :id")
+    suspend fun updateCityName(cityName: String, id: Int)
 
 
 }

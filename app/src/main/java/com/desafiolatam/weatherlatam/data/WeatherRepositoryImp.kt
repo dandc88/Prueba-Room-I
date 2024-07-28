@@ -19,17 +19,19 @@ class WeatherRepositoryImp(
             entity?.let { entityToDto(it) }
         }
 
-
-    override suspend fun insertWeather(weatherEntity: WeatherEntity) {
-        Log.d("WeatherRepositoryImp", "Inserting weather data: $weatherEntity") // Registro para depuración
-        weatherDao.insertWeather(weatherEntity)
-    }
     override suspend fun clearAll() = weatherDao.clearAll()
 
-    override suspend fun updateCityName(weatherDto: WeatherDto) =
-        weatherDao.updateCityName(weatherDto.toEntity())
 
+    override suspend fun upsertWeather(weatherEntity: WeatherEntity) {
+        Log.d(
+            "WeatherRepositoryImp",
+            "Upserting weather data: $weatherEntity"
+        ) // Registro para depuración
+        weatherDao.upsertWeather(weatherEntity)
+    }
 
-
+    override suspend fun updateCityName(cityName: String, id: Int) {
+        weatherDao.updateCityName(cityName, id)
+    }
 
 }

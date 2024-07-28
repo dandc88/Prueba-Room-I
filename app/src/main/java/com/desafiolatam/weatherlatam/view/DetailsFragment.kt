@@ -44,18 +44,16 @@ class DetailsFragment : Fragment() {
     }
 
     private fun getWeatherData(id: Int) {
-
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         val unit = sharedPref.getString(getString(R.string.settings_temperature_unit), CELSIUS)
 
         lifecycleScope.launchWhenResumed {
             viewModel.getWeatherById(id).collectLatest { weather ->
                 weather?.run {
-                    binding.currentTemp.text =
-                        if(unit == CELSIUS) currentTemp.toString() else currentTemp.toFahrenheit().toString()
+                    binding.currentTemp.text = if(unit == CELSIUS) currentTemp.toString() else currentTemp.toFahrenheit().toString()
                     binding.maximumTemp.text = getString(R.string.max_temp, maxTemp.toString())
-                    binding.minimumTemp.text= getString(R.string.min_temp, minTemp.toString())
-                    binding.pressure.text= getString(R.string.pressure, pressure.toString())
+                    binding.minimumTemp.text = getString(R.string.min_temp, minTemp.toString())
+                    binding.pressure.text = getString(R.string.pressure, pressure.toString())
                     binding.humidity.text = getString(R.string.humidity, humidity.toString())
                     binding.windSpeed.text = getString(R.string.wind_speed, windSpeed.toString())
                     binding.sunrise.text = getString(R.string.sunrise, sunrise.toShortDateString())
@@ -63,12 +61,20 @@ class DetailsFragment : Fragment() {
                     binding.cityName.text = cityName
                 }
             }
+
+            viewModel.cityName.collectLatest { cityName ->
+                binding.cityName.text = cityName
+            }
         }
     }
 
     private fun editCityName() {
         binding.cityName.setOnLongClickListener {
             val dialog = EditCityNameDialogFragment()
+            val args = Bundle().apply {
+                putInt(ITEM_ID, weatherInfoId)
+            }
+            dialog.arguments = args
             dialog.show(childFragmentManager, "EditCityNameDialogFragment")
 
             true
