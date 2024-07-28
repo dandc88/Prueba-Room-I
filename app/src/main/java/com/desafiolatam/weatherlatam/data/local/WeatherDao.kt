@@ -28,5 +28,8 @@ interface WeatherDao {
     @Query("UPDATE weather SET cityName = :cityName WHERE id = :id")
     suspend fun updateCityName(cityName: String, id: Int)
 
+    @Query("SELECT COUNT(*) FROM weather")
+    suspend fun countWeatherEntries(): Int
+
 
 }

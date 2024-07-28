@@ -11,7 +11,7 @@ interface WeatherRepository {
     suspend fun getWeatherById(id: Int): Flow<WeatherDto?>
     suspend fun clearAll()
     suspend fun upsertWeather(weatherEntity: WeatherEntity)
-
     suspend fun updateCityName(cityName: String, id: Int)
 
+    suspend fun countWeatherEntries(): Int
 }

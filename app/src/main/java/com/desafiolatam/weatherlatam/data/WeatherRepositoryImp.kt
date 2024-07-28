@@ -34,4 +34,8 @@ class WeatherRepositoryImp(
         weatherDao.updateCityName(cityName, id)
     }
 
+    override suspend fun countWeatherEntries(): Int {
+        return weatherDao.countWeatherEntries()
+    }
+
 }

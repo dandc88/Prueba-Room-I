@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.desafiolatam.weatherlatam.R
 import com.desafiolatam.weatherlatam.WeatherApplication
@@ -19,6 +21,7 @@ import com.desafiolatam.weatherlatam.extension.toShortDateString
 import com.desafiolatam.weatherlatam.view.viewmodel.WeatherViewModel
 import com.desafiolatam.weatherlatam.view.viewmodel.WeatherViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class DetailsFragment : Fragment() {
 
@@ -47,23 +50,36 @@ class DetailsFragment : Fragment() {
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         val unit = sharedPref.getString(getString(R.string.settings_temperature_unit), CELSIUS)
 
-        lifecycleScope.launchWhenResumed {
-            viewModel.getWeatherById(id).collectLatest { weather ->
-                weather?.run {
-                    binding.currentTemp.text = if(unit == CELSIUS) currentTemp.toString() else currentTemp.toFahrenheit().toString()
-                    binding.maximumTemp.text = getString(R.string.max_temp, maxTemp.toString())
-                    binding.minimumTemp.text = getString(R.string.min_temp, minTemp.toString())
-                    binding.pressure.text = getString(R.string.pressure, pressure.toString())
-                    binding.humidity.text = getString(R.string.humidity, humidity.toString())
-                    binding.windSpeed.text = getString(R.string.wind_speed, windSpeed.toString())
-                    binding.sunrise.text = getString(R.string.sunrise, sunrise.toShortDateString())
-                    binding.sunset.text = getString(R.string.sunset, sunset.toShortDateString())
-                    binding.cityName.text = cityName
-                }
-            }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                launch {
+                    viewModel.getWeatherById(id).collectLatest { weather ->
+                        weather?.run {
+                            binding.currentTemp.text =
+                                if (unit == CELSIUS) currentTemp.toString() else currentTemp.toFahrenheit()
+                                    .toString()
+                            binding.maximumTemp.text =
+                                getString(R.string.max_temp, maxTemp.toString())
+                            binding.minimumTemp.text =
+                                getString(R.string.min_temp, minTemp.toString())
+                            binding.pressure.text =
+                                getString(R.string.pressure, pressure.toString())
+                            binding.humidity.text =
+                                getString(R.string.humidity, humidity.toString())
+                            binding.windSpeed.text =
+                                getString(R.string.wind_speed, windSpeed.toString())
+                            binding.sunrise.text =
+                                getString(R.string.sunrise, sunrise.toShortDateString())
+                            binding.sunset.text =
+                                getString(R.string.sunset, sunset.toShortDateString())
+                            binding.cityName.text = cityName
+                        }
+                    }
 
-            viewModel.cityName.collectLatest { cityName ->
-                binding.cityName.text = cityName
+                    viewModel.cityName.collectLatest { cityName ->
+                        binding.cityName.text = cityName
+                    }
+                }
             }
         }
     }

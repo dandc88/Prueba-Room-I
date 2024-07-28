@@ -23,9 +23,19 @@ class WeatherApplication : Application() {
         super.onCreate()
         // Poblar la base de datos al iniciar la aplicación
         applicationScope.launch {
-            Log.d("WeatherApp", "Se llama a populateDatabase()")
-            populateDatabase()
+            Log.d("WeatherApp", "Verificando si es necesario poblar la base de datos")
+            if (shouldPopulateDatabase()) {
+                Log.d("WeatherApp", "Poblando la base de datos")
+                populateDatabase()
+            } else {
+                Log.d("WeatherApp", "La base de datos ya está poblada")
+            }
         }
+    }
+
+    private suspend fun shouldPopulateDatabase(): Boolean {
+        val count = repository.countWeatherEntries()
+        return count == 0
     }
 
     private suspend fun populateDatabase() {
